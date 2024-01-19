@@ -1,4 +1,4 @@
-package com.example.proyectoservicios2;
+// UDPServer.java
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ServidorUDP {
+public class UDPServidor {
     private static final int PUERTO_SERVIDOR = 5010;
     private static final int PUERTO_CLIENTE = 6010;
     private static final int TAMANO_BUFFER = 1024;
@@ -15,7 +15,7 @@ public class ServidorUDP {
     private List<InetAddress> direccionesClientes;
     private Map<InetAddress, String> apodosClientes;
 
-    public ServidorUDP() {
+    public UDPServidor() {
         direccionesClientes = new ArrayList<>();
         apodosClientes = new HashMap<>();
     }
@@ -36,13 +36,9 @@ public class ServidorUDP {
                     System.out.println("Servidor detenido.");
                     break;
                 } else if (mensaje.startsWith("NICK:")) {
-                    // Manejar el registro de apodo del cliente
                     manejarRegistroApodo(mensaje, direccionCliente);
                 } else {
-                    // Manejar mensajes regulares
                     System.out.println("Recibido de " + direccionCliente + ": " + mensaje);
-
-                    // Reenviar el mensaje a todos los clientes
                     reenviarMensajeAClientes(mensaje, direccionCliente);
                 }
             }
@@ -52,12 +48,11 @@ public class ServidorUDP {
     }
 
     private void manejarRegistroApodo(String mensaje, InetAddress direccionCliente) {
-        String apodo = mensaje.substring(5); // Extraer el apodo del mensaje
+        String apodo = mensaje.substring(5);
         if (!apodosClientes.containsValue(apodo)) {
             apodosClientes.put(direccionCliente, apodo);
             System.out.println("Cliente " + direccionCliente + " registrado con apodo: " + apodo);
         } else {
-            // Informar al cliente que el apodo elegido ya está en uso
             System.out.println("Apodo ya en uso. Por favor, elige otro.");
         }
     }
@@ -78,7 +73,6 @@ public class ServidorUDP {
     }
 
     public static void main(String[] args) {
-        new ServidorUDP().iniciarServidor();
+        new UDPServidor().iniciarServidor();
     }
 }
-

@@ -1,5 +1,4 @@
-package com.example.proyectoservicios2;
-
+package com.example.cliente;// UDPClient.java
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -12,8 +11,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-
-public class ClienteUDP extends Application {
+public class UDPCliente extends Application {
     private static final int PUERTO_SERVIDOR = 5010;
     private static final int PUERTO_CLIENTE = 6010;
     private static final int TAMANO_BUFFER = 1024;
@@ -35,7 +33,6 @@ public class ClienteUDP extends Application {
         primaryStage.setScene(escena);
         primaryStage.show();
 
-        // Iniciar la escucha de mensajes entrantes
         new Thread(this::iniciarCliente).start();
     }
 
@@ -43,20 +40,6 @@ public class ClienteUDP extends Application {
         try (DatagramSocket socketCliente = new DatagramSocket()) {
             String mensaje = campoMensaje.getText();
             byte[] datosEnviar = mensaje.getBytes();
-
-            DatagramPacket paqueteEnviar = new DatagramPacket(datosEnviar, datosEnviar.length, InetAddress.getLocalHost(), PUERTO_SERVIDOR);
-            socketCliente.send(paqueteEnviar);
-
-            campoMensaje.clear();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void enviarApodo() {
-        try (DatagramSocket socketCliente = new DatagramSocket()) {
-            String apodo = "NICK:" + campoMensaje.getText();
-            byte[] datosEnviar = apodo.getBytes();
 
             DatagramPacket paqueteEnviar = new DatagramPacket(datosEnviar, datosEnviar.length, InetAddress.getLocalHost(), PUERTO_SERVIDOR);
             socketCliente.send(paqueteEnviar);

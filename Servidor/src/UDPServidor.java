@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import Interfaces.ConstantsInterface;
 
-public class UDPServidor implements ConstantsInterface {
+public class UDPServidor extends Cliente implements ConstantsInterface{
 
     private List<InetAddress> direccionesClientes;
     private Map<InetAddress, String> apodosClientes;

@@ -12,11 +12,27 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
+/**
+ * La clase UDPCliente representa la aplicación cliente UDP con interfaz gráfica.
+ * Permite enviar mensajes al servidor y mostrar los mensajes recibidos en un área de chat.
+ */
 public class UDPCliente extends Application implements ConstantsInterface {
 
+    /**
+     * Área de texto para mostrar los mensajes del chat.
+     */
     private TextArea areaChat;
+
+    /**
+     * Campo de texto para ingresar mensajes a enviar.
+     */
     private TextField campoMensaje;
 
+    /**
+     * Método principal de la aplicación JavaFX que inicia la interfaz gráfica del cliente UDP.
+     *
+     * @param primaryStage El escenario principal de la aplicación.
+     */
     @Override
     public void start(Stage primaryStage) {
         areaChat = new TextArea();
@@ -31,9 +47,14 @@ public class UDPCliente extends Application implements ConstantsInterface {
         primaryStage.setScene(escena);
         primaryStage.show();
 
+        // Iniciar el cliente en un hilo separado.
         new Thread(this::iniciarCliente).start();
     }
 
+    /**
+     * Método que se llama cuando se presiona el botón "Enviar".
+     * Envía el mensaje ingresado al servidor a través de DatagramSocket.
+     */
     private void enviarMensaje() {
         try (DatagramSocket socketCliente = new DatagramSocket()) {
             String mensaje = campoMensaje.getText();
@@ -48,6 +69,10 @@ public class UDPCliente extends Application implements ConstantsInterface {
         }
     }
 
+    /**
+     * Método que inicia el cliente y escucha continuamente los mensajes recibidos del servidor.
+     * Los mensajes recibidos se muestran en el área de chat.
+     */
     private void iniciarCliente() {
         try (DatagramSocket socketCliente = new DatagramSocket(PUERTO_CLIENTE)) {
             while (true) {
@@ -63,6 +88,11 @@ public class UDPCliente extends Application implements ConstantsInterface {
         }
     }
 
+    /**
+     * Método principal que lanza la aplicación JavaFX.
+     *
+     * @param args Los argumentos de la línea de comandos (no se utilizan en este caso).
+     */
     public static void main(String[] args) {
         launch(args);
     }

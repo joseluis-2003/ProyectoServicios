@@ -1,21 +1,17 @@
-// UDPServer.java
+package server;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import Interfaces.ConstantsInterface;
 
 public class UDPServidor extends Cliente implements ConstantsInterface{
 
-    private List<InetAddress> direccionesClientes;
-    private Map<InetAddress, String> apodosClientes;
+    private List<Cliente> clientes;
 
     public UDPServidor() {
-        direccionesClientes = new ArrayList<>();
-        apodosClientes = new HashMap<>();
+        clientes = new ArrayList<>();
     }
 
     public void iniciarServidor() {
@@ -35,10 +31,9 @@ public class UDPServidor extends Cliente implements ConstantsInterface{
                     break;
                 } else if (mensaje.startsWith("NICK:")) {
                     manejarRegistroApodo(mensaje, direccionCliente);
-                } else {
-                    System.out.println("Recibido de " + direccionCliente + ": " + mensaje);
-                    reenviarMensajeAClientes(mensaje, direccionCliente);
                 }
+                System.out.println("Recibido de " + direccionCliente + ": " + mensaje);
+                reenviarMensajeAClientes(mensaje, direccionCliente);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,9 +42,12 @@ public class UDPServidor extends Cliente implements ConstantsInterface{
 
     private void manejarRegistroApodo(String mensaje, InetAddress direccionCliente) {
         String apodo = mensaje.substring(5);
-        if (!apodosClientes.containsValue(apodo)) {
-            apodosClientes.put(direccionCliente, apodo);
-            System.out.println("Cliente " + direccionCliente + " registrado con apodo: " + apodo);
+        if (verificarApodo(apodo)) {
+            Cliente cliente = buscarCliente(direccionCliente);
+            if(cliente != null){
+                cliente.setApodo(apodo);
+            }
+            System.out.println("server.Cliente " + direccionCliente + " registrado con apodo: " + apodo);
         } else {
             System.out.println("Apodo ya en uso. Por favor, elige otro.");
         }
@@ -59,9 +57,13 @@ public class UDPServidor extends Cliente implements ConstantsInterface{
         try (DatagramSocket socketCliente = new DatagramSocket()) {
             byte[] datosEnviar = mensaje.getBytes();
 
-            for (InetAddress direccionCliente : direccionesClientes) {
-                if (!direccionCliente.equals(direccionRemitente)) {
-                    DatagramPacket paqueteEnviar = new DatagramPacket(datosEnviar, datosEnviar.length, direccionCliente, PUERTO_CLIENTE);
+            Iterator<Cliente> iterador = clientes.iterator();
+
+            while (iterador.hasNext()) {
+                Cliente cliente = iterador.next();
+                if (cliente.getInetAddress()==direccionRemitente) {
+                    DatagramPacket paqueteEnviar = new DatagramPacket(datosEnviar, datosEnviar.length,
+                            cliente.getInetAddress(), PUERTO_CLIENTE);
                     socketCliente.send(paqueteEnviar);
                 }
             }
@@ -70,7 +72,29 @@ public class UDPServidor extends Cliente implements ConstantsInterface{
         }
     }
 
-    public static void main(String[] args) {
-        new UDPServidor().iniciarServidor();
+    private boolean verificarApodo(String apodo){
+        Iterator<Cliente> iterador = clientes.iterator();
+
+        while (iterador.hasNext()) {
+            Cliente cliente = iterador.next();
+            if(cliente.getApodo().equals(apodo)){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private Cliente buscarCliente(InetAddress inetAddress){
+        Iterator<Cliente> iterador = clientes.iterator();
+
+        while (iterador.hasNext()) {
+            Cliente cliente = iterador.next();
+            if(cliente.getInetAddress() == inetAddress){
+                return cliente;
+            }
+        }
+
+        return null;
     }
 }

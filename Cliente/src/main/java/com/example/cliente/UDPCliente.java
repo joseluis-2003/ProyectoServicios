@@ -1,4 +1,5 @@
 package com.example.cliente;// UDPClient.java
+import com.example.cliente.Interfaces.ConstantsInterface;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -11,10 +12,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-public class UDPCliente extends Application {
-    private static final int PUERTO_SERVIDOR = 5010;
-    private static final int PUERTO_CLIENTE = 6010;
-    private static final int TAMANO_BUFFER = 1024;
+public class UDPCliente extends Application implements ConstantsInterface {
 
     private TextArea areaChat;
     private TextField campoMensaje;

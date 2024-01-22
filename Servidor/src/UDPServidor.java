@@ -6,11 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.example.cliente.Interfaces.ConstantsInterface;
 
-public class UDPServidor {
-    private static final int PUERTO_SERVIDOR = 5010;
-    private static final int PUERTO_CLIENTE = 6010;
-    private static final int TAMANO_BUFFER = 1024;
+public class UDPServidor implements ConstantsInterface {
 
     private List<InetAddress> direccionesClientes;
     private Map<InetAddress, String> apodosClientes;

@@ -1,4 +1,4 @@
-package com.example.cliente.Interfaces;
+package Interfaces;
 
 public interface ConstantsInterface {
     int PUERTO_SERVIDOR = 5010;

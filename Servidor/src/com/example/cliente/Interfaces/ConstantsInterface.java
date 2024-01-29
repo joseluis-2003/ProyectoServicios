@@ -1,4 +1,4 @@
-package Interfaces;
+package com.example.cliente.Interfaces;
 
 /**
  * Esta interfaz proporciona constantes utilizadas en la aplicación.

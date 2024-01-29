@@ -1,4 +1,4 @@
-import server.UDPServidor;
+import com.example.cliente.UDPServidor;
 
 /**
  * La clase Main contiene el método principal que inicia el servidor UDP.

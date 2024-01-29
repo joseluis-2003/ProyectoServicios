@@ -71,6 +71,7 @@ public class UDPCliente extends Application implements ConstantsInterface {
             // Convertir el objeto a bytes
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeUTF("com.example.cliente.Mensaje");
             oos.writeObject(mensaje);
             byte[] datosEnviar = baos.toByteArray();
 
@@ -100,6 +101,7 @@ public class UDPCliente extends Application implements ConstantsInterface {
                 Mensaje mensaje = (Mensaje) ois.readObject();
 
                 areaChat.appendText("Recibido de "+mensaje.getNombre()+": " + mensaje.getMensaje() + "\n");
+                System.out.println(mensaje.getMensaje());
             }
         } catch (Exception e) {
             e.printStackTrace();

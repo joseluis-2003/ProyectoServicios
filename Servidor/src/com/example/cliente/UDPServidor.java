@@ -1,12 +1,13 @@
-package server;
+package com.example.cliente;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.Inet4Address;
 import java.net.InetAddress;
-import Interfaces.ConstantsInterface;
+import com.example.cliente.Interfaces.ConstantsInterface;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -46,41 +47,40 @@ public class UDPServidor extends Cliente implements ConstantsInterface {
 
                 ByteArrayInputStream bais = new ByteArrayInputStream(datosRecibidos);
                 ObjectInputStream ois = new ObjectInputStream(bais);
-                Mensaje mensaje = (Mensaje) ois.readObject();
 
-                InetAddress direccionCliente = paqueteRecibido.getAddress();
+                // Lee el nombre de la clase del flujo de entrada
+                String className = ois.readUTF();
 
-                if (mensaje.getMensaje().equals("STOP")) {
-                    System.out.println("Servidor detenido.");
-                    break;
+                // Carga dinámicamente la clase en el servidor
+                Class<?> messageClass = Class.forName(className);
+
+                // Deserializa el objeto
+                Object receivedObject = ois.readObject();
+
+                // Realiza operaciones con el objeto recibido
+                if (receivedObject instanceof Mensaje) {
+                    Mensaje mensaje = (Mensaje) receivedObject;
+                    InetAddress direccionCliente = paqueteRecibido.getAddress();
+
+                    if(buscarCliente(direccionCliente) == null){
+                        Cliente cliente = new Cliente(direccionCliente);
+                        clientes.add(cliente);
+                        System.out.println(clientes.getLast());
+                    }
+
+                    if (mensaje.getMensaje().equals("STOP")) {
+                        System.out.println("Servidor detenido.");
+                        break;
+                    }
+                    System.out.println("Recibido de " + direccionCliente + ": " + mensaje.getMensaje());
+                    reenviarMensajeAClientes(mensaje, direccionCliente, className);
                 }
-                System.out.println("Recibido de " + direccionCliente + ": " + mensaje.getMensaje());
-                reenviarMensajeAClientes(mensaje, direccionCliente);
+
+                ois.close();
+                bais.close();
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    /**
-     * Maneja el registro de apodo de un cliente.
-     * Extrae el apodo del mensaje y verifica su disponibilidad antes de asignarlo al cliente.
-     *
-     * @param mensaje           El mensaje que contiene el apodo a registrar.
-     * @param direccionCliente La dirección IP del cliente que envía el mensaje.
-     */
-    private void manejarRegistroApodo(String mensaje, InetAddress direccionCliente) {
-        String apodo = mensaje.substring(5);
-        if (verificarApodo(apodo)) {
-            Cliente cliente = buscarCliente(direccionCliente);
-            if(cliente != null){
-                cliente.setApodo(apodo);
-                System.out.println("server.Cliente " + direccionCliente + " registrado con apodo: " + apodo);
-            }else{
-                System.out.println("Cliente no encontrado");
-            }
-        } else {
-            System.out.println("Apodo ya en uso. Por favor, elige otro.");
         }
     }
 
@@ -90,12 +90,12 @@ public class UDPServidor extends Cliente implements ConstantsInterface {
      * @param mensaje            El mensaje a reenviar.
      * @param direccionRemitente La dirección IP del cliente que envió el mensaje original.
      */
-    private void reenviarMensajeAClientes(Mensaje mensaje, InetAddress direccionRemitente) {
+    private void reenviarMensajeAClientes(Mensaje mensaje, InetAddress direccionRemitente, String className) {
         try (DatagramSocket socketCliente = new DatagramSocket()) {
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(mensaje);
+            oos.writeObject(mensaje); // Escribir el objeto en el flujo de salida
             byte[] datosEnviar = baos.toByteArray();
 
             Iterator<Cliente> iterador = clientes.iterator();

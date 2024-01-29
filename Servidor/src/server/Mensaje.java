@@ -1,6 +1,8 @@
 package server;
 
-public class Mensaje {
+import java.io.Serializable;
+
+public class Mensaje implements Serializable {
 
     String mensaje;
 

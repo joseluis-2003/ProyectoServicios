@@ -1,6 +1,8 @@
 package com.example.cliente;
 
-public class Mensaje {
+import java.io.Serializable;
+
+public class Mensaje implements Serializable {
 
     String mensaje;
 

@@ -1,4 +1,8 @@
 package server;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -40,16 +44,17 @@ public class UDPServidor extends Cliente implements ConstantsInterface {
                 DatagramPacket paqueteRecibido = new DatagramPacket(datosRecibidos, datosRecibidos.length);
                 socketServidor.receive(paqueteRecibido);
 
-                String mensaje = new String(paqueteRecibido.getData(), 0, paqueteRecibido.getLength());
+                ByteArrayInputStream bais = new ByteArrayInputStream(datosRecibidos);
+                ObjectInputStream ois = new ObjectInputStream(bais);
+                Mensaje mensaje = (Mensaje) ois.readObject();
+
                 InetAddress direccionCliente = paqueteRecibido.getAddress();
 
-                if (mensaje.equals("STOP")) {
+                if (mensaje.getMensaje().equals("STOP")) {
                     System.out.println("Servidor detenido.");
                     break;
-                } else if (mensaje.startsWith("NICK:")) {
-                    manejarRegistroApodo(mensaje, direccionCliente);
                 }
-                System.out.println("Recibido de " + direccionCliente + ": " + mensaje);
+                System.out.println("Recibido de " + direccionCliente + ": " + mensaje.getMensaje());
                 reenviarMensajeAClientes(mensaje, direccionCliente);
             }
         } catch (Exception e) {
@@ -85,15 +90,19 @@ public class UDPServidor extends Cliente implements ConstantsInterface {
      * @param mensaje            El mensaje a reenviar.
      * @param direccionRemitente La dirección IP del cliente que envió el mensaje original.
      */
-    private void reenviarMensajeAClientes(String mensaje, InetAddress direccionRemitente) {
+    private void reenviarMensajeAClientes(Mensaje mensaje, InetAddress direccionRemitente) {
         try (DatagramSocket socketCliente = new DatagramSocket()) {
-            byte[] datosEnviar = mensaje.getBytes();
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(mensaje);
+            byte[] datosEnviar = baos.toByteArray();
 
             Iterator<Cliente> iterador = clientes.iterator();
 
             while (iterador.hasNext()) {
                 Cliente cliente = iterador.next();
-                if (cliente.getInetAddress() == direccionRemitente) {
+                if (cliente.getInetAddress() != direccionRemitente) {
                     DatagramPacket paqueteEnviar = new DatagramPacket(datosEnviar, datosEnviar.length,
                             cliente.getInetAddress(), PUERTO_CLIENTE);
                     socketCliente.send(paqueteEnviar);

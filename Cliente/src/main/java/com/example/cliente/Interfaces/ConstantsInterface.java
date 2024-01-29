@@ -1,5 +1,8 @@
 package com.example.cliente.Interfaces;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
+
 /**
  * Esta interfaz proporciona constantes utilizadas en la aplicación.
  * Incluye valores como el puerto del servidor, el puerto del cliente
@@ -22,4 +25,7 @@ public interface ConstantsInterface {
      * entre el servidor y el cliente.
      */
     int TAMANO_BUFFER = 1024;
+
+    String ipServidor = "192.168.1.105";
+
 }

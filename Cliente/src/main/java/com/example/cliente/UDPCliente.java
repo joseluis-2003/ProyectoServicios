@@ -8,9 +8,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.*;
 
 /**
  * La clase UDPCliente representa la aplicación cliente UDP con interfaz gráfica.
@@ -28,6 +30,9 @@ public class UDPCliente extends Application implements ConstantsInterface {
      */
     private TextField campoMensaje;
 
+    private Inet4Address inetAdressServer;
+
+
     /**
      * Método principal de la aplicación JavaFX que inicia la interfaz gráfica del cliente UDP.
      *
@@ -35,6 +40,7 @@ public class UDPCliente extends Application implements ConstantsInterface {
      */
     @Override
     public void start(Stage primaryStage) {
+        setServerIp();
         areaChat = new TextArea();
         campoMensaje = new TextField();
         Button botonEnviar = new Button("Enviar");
@@ -57,10 +63,19 @@ public class UDPCliente extends Application implements ConstantsInterface {
      */
     private void enviarMensaje() {
         try (DatagramSocket socketCliente = new DatagramSocket()) {
-            String mensaje = campoMensaje.getText();
-            byte[] datosEnviar = mensaje.getBytes();
+            String texto = campoMensaje.getText();
+            String nombre = "Ricardo";
+            //if(apodo != null)
+            Mensaje mensaje = new Mensaje(texto, nombre);
 
-            DatagramPacket paqueteEnviar = new DatagramPacket(datosEnviar, datosEnviar.length, InetAddress.getLocalHost(), PUERTO_SERVIDOR);
+            // Convertir el objeto a bytes
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(mensaje);
+            byte[] datosEnviar = baos.toByteArray();
+
+            DatagramPacket paqueteEnviar = new DatagramPacket(datosEnviar, datosEnviar.length,
+                    inetAdressServer, PUERTO_SERVIDOR);
             socketCliente.send(paqueteEnviar);
 
             campoMensaje.clear();
@@ -80,11 +95,22 @@ public class UDPCliente extends Application implements ConstantsInterface {
                 DatagramPacket paqueteRecibido = new DatagramPacket(datosRecibidos, datosRecibidos.length);
                 socketCliente.receive(paqueteRecibido);
 
-                String mensaje = new String(paqueteRecibido.getData(), 0, paqueteRecibido.getLength());
-                areaChat.appendText("Recibido: " + mensaje + "\n");
+                ByteArrayInputStream bais = new ByteArrayInputStream(datosRecibidos);
+                ObjectInputStream ois = new ObjectInputStream(bais);
+                Mensaje mensaje = (Mensaje) ois.readObject();
+
+                areaChat.appendText("Recibido de "+mensaje.getNombre()+": " + mensaje.getMensaje() + "\n");
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void setServerIp (){
+        try {
+            inetAdressServer = (Inet4Address) InetAddress.getByName(ipServidor);
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
         }
     }
 

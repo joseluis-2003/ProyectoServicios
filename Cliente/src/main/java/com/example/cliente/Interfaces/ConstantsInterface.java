@@ -26,6 +26,6 @@ public interface ConstantsInterface {
      */
     int TAMANO_BUFFER = 1024;
 
-    String ipServidor = "192.168.1.105";
+    String ipServidor = "192.168.56.1";
 
 }

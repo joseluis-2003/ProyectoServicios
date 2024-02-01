@@ -1,6 +1,8 @@
 package com.example.cliente;// UDPClient.java
 import com.example.cliente.Interfaces.ConstantsInterface;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -24,6 +26,7 @@ public class UDPCliente extends Application implements ConstantsInterface {
      * Área de texto para mostrar los mensajes del chat.
      */
     private TextArea areaChat;
+    private Stage primaryStage;
 
     /**
      * Campo de texto para ingresar mensajes a enviar.
@@ -40,18 +43,23 @@ public class UDPCliente extends Application implements ConstantsInterface {
      */
     @Override
     public void start(Stage primaryStage) {
+
+        this.primaryStage = primaryStage;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("login-view.fxml"));
+            Parent root = loader.load();
+
+            LoginController loginController = loader.getController();
+            loginController.setPrimaryStage(primaryStage);
+
+            Scene scene = new Scene(root);
+            primaryStage.setScene(scene);
+            primaryStage.setTitle("Cliente UDP - Login");
+            primaryStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         setServerIp();
-        areaChat = new TextArea();
-        campoMensaje = new TextField();
-        Button botonEnviar = new Button("Enviar");
-        botonEnviar.setOnAction(e -> enviarMensaje());
-
-        VBox contenedorPrincipal = new VBox(areaChat, campoMensaje, botonEnviar);
-        Scene escena = new Scene(contenedorPrincipal, 400, 300);
-
-        primaryStage.setTitle("Cliente UDP");
-        primaryStage.setScene(escena);
-        primaryStage.show();
 
         // Iniciar el cliente en un hilo separado.
         new Thread(this::iniciarCliente).start();

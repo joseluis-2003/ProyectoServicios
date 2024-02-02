@@ -1,5 +1,7 @@
 import com.example.cliente.UDPServidor;
 
+import javax.swing.*;
+
 /**
  * La clase Main contiene el método principal que inicia el servidor UDP.
  */
@@ -13,6 +15,7 @@ public class Main {
     public static void main(String[] args) {
         // Crear una instancia de UDPServidor y iniciar el servidor.
         UDPServidor server = new UDPServidor();
+        SwingUtilities.invokeLater(server::crearVentana);
         server.iniciarServidor();
     }
 }

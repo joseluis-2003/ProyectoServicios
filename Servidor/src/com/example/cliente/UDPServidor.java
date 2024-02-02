@@ -8,6 +8,8 @@ import java.net.DatagramSocket;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import com.example.cliente.Interfaces.ConstantsInterface;
+
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -17,6 +19,8 @@ import java.util.List;
  * proporcionando funcionalidad para gestionar un servidor UDP y la comunicación con clientes.
  */
 public class UDPServidor extends Cliente implements ConstantsInterface {
+
+    private static JFrame ventana;
 
     /**
      * Lista que almacena objetos Cliente que representan a los clientes conectados al servidor.
@@ -65,6 +69,7 @@ public class UDPServidor extends Cliente implements ConstantsInterface {
                     if(buscarCliente(direccionCliente) == null){
                         Cliente cliente = new Cliente(direccionCliente);
                         clientes.add(cliente);
+                        mostrarTexto(mensaje.getNombre()+": "+cliente.getInetAddress().toString());
                         System.out.println(clientes.getLast());
                     }
 
@@ -143,11 +148,32 @@ public class UDPServidor extends Cliente implements ConstantsInterface {
 
         while (iterador.hasNext()) {
             Cliente cliente = iterador.next();
-            if (cliente.getInetAddress() == inetAddress) {
+            if (cliente.getInetAddress().toString().equals(inetAddress.toString())) {
                 return cliente;
             }
         }
-
         return null;
+    }
+
+    public void crearVentana() {
+        ventana = new JFrame("Ventana de Consola");
+        ventana.setSize(400, 300);
+        ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ventana.setLocationRelativeTo(null);
+
+        JTextArea areaTexto = new JTextArea();
+        areaTexto.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(areaTexto);
+
+        ventana.getContentPane().add(scrollPane);
+
+        ventana.setVisible(true);
+    }
+
+    public static void mostrarTexto(String texto) {
+        SwingUtilities.invokeLater(() -> {
+            JTextArea areaTexto = (JTextArea) ((JScrollPane) ventana.getContentPane().getComponent(0)).getViewport().getView();
+            areaTexto.append(texto + "\n");
+        });
     }
 }

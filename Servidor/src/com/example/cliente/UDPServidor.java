@@ -70,7 +70,7 @@ public class UDPServidor extends Cliente implements ConstantsInterface {
                         Cliente cliente = new Cliente(direccionCliente);
                         clientes.add(cliente);
                         mostrarTexto(mensaje.getNombre()+": "+cliente.getInetAddress().toString());
-                        System.out.println(clientes.getLast());
+                        //System.out.println(clientes.getLast());
                     }
 
                     if (mensaje.getMensaje().equals("STOP")) {

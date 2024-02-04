@@ -23,6 +23,11 @@ import java.net.*;
 public class UDPCliente extends Application implements ConstantsInterface {
 
     /**
+     * Puerto utilizado por el cliente para la comunicación.
+     */
+    static int PUERTO_CLIENTE = 6010;
+
+    /**
      * Área de texto para mostrar los mensajes del chat.
      */
     private TextArea areaChat;

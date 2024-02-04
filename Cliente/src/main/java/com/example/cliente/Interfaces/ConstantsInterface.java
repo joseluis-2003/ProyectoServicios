@@ -16,11 +16,6 @@ public interface ConstantsInterface {
     int PUERTO_SERVIDOR = 5010;
 
     /**
-     * Puerto utilizado por el cliente para la comunicación.
-     */
-    int PUERTO_CLIENTE = 6010;
-
-    /**
      * Tamaño del búfer utilizado para la transferencia de datos
      * entre el servidor y el cliente.
      */

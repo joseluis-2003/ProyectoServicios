@@ -30,9 +30,10 @@ public class LoginController {
 
     @FXML
     private void onActionButtonLogin(ActionEvent event) {
-        // Lógica de autenticación, verifica credenciales, etc.
+        UDPCliente.PUERTO_CLIENTE = Integer.parseInt(textFieldLocalPort.getText());
+
         if (autenticar()) {
-            // Cargar la vista Hello-view.fxml después del login exitoso
+
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("Hello-view.fxml"));
                 Parent root = loader.load();

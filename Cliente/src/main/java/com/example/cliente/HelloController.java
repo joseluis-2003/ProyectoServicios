@@ -21,12 +21,6 @@ public class HelloController {
     private void enviarMensaje() {
         String mensaje = campoMensaje.getText();
         if (!mensaje.isEmpty()) {
-            // Agregar el mensaje al área de chat
-            areaChat.appendText("Tú: " + mensaje + "\n");
-
-            // Aquí puedes agregar la lógica para enviar el mensaje al servidor si es necesario
-            // ...
-
             // Limpiar el campo de texto después de enviar el mensaje
             campoMensaje.clear();
         }

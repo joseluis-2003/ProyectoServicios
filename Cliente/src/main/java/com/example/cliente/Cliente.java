@@ -29,6 +29,10 @@ public class Cliente {
         this.inetAddress = inetAddress;
     }
 
+    public Cliente(String apodo) {
+        this.apodo = apodo;
+    }
+
     /**
      * Constructor de la clase Cliente que permite establecer la dirección IP.
      * El apodo se establece como nulo.

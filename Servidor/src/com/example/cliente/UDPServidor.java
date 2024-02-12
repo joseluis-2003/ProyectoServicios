@@ -25,7 +25,7 @@ public class UDPServidor extends Cliente implements ConstantsInterface {
     /**
      * Lista que almacena objetos Cliente que representan a los clientes conectados al servidor.
      */
-    private List<Cliente> clientes;
+    private static List<Cliente> clientes;
 
     /**
      * Constructor predeterminado de la clase UDPServidor.
@@ -70,7 +70,6 @@ public class UDPServidor extends Cliente implements ConstantsInterface {
                         Cliente cliente = new Cliente(direccionCliente);
                         clientes.add(cliente);
                         mostrarTexto(mensaje.getNombre()+": "+cliente.getInetAddress().toString());
-                        //System.out.println(clientes.getLast());
                     }
 
                     if (mensaje.getMensaje().equals("STOP")) {
@@ -124,7 +123,7 @@ public class UDPServidor extends Cliente implements ConstantsInterface {
      * @param apodo El apodo a verificar.
      * @return true si el apodo está disponible; false, de lo contrario.
      */
-    private boolean verificarApodo(String apodo) {
+    public static boolean verificarApodo(String apodo) {
         Iterator<Cliente> iterador = clientes.iterator();
 
         while (iterador.hasNext()) {

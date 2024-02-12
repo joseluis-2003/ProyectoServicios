@@ -77,9 +77,7 @@ public class UDPCliente extends Application implements ConstantsInterface {
     private void enviarMensaje() {
         try (DatagramSocket socketCliente = new DatagramSocket()) {
             String texto = campoMensaje.getText();
-            String nombre = "Ricardo";
-            //if(apodo != null)
-            Mensaje mensaje = new Mensaje(texto, nombre);
+            Mensaje mensaje = new Mensaje(texto, LoginController.usuario.getApodo());
 
             // Convertir el objeto a bytes
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -113,8 +111,10 @@ public class UDPCliente extends Application implements ConstantsInterface {
                 ObjectInputStream ois = new ObjectInputStream(bais);
                 Mensaje mensaje = (Mensaje) ois.readObject();
 
-                areaChat.appendText("Recibido de "+mensaje.getNombre()+": " + mensaje.getMensaje() + "\n");
+
+                areaChat.appendText("Recibido de "+mensaje.getApodo()+": " + mensaje.getMensaje() + "\n");
                 System.out.println(mensaje.getMensaje());
+
             }
         } catch (Exception e) {
             e.printStackTrace();

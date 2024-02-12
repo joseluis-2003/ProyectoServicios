@@ -17,7 +17,7 @@
     </Text>
    <Label text="Apodo" />
 
-    <TextField fx:id="textFieldIp" maxHeight="50.0" maxWidth="250.0" minHeight="20.0" minWidth="200.0" onAction="#onActionTextFieldIp" prefHeight="35.0" prefWidth="200.0" text="Pepe">
+    <TextField fx:id="textFieldApodo" maxHeight="50.0" maxWidth="250.0" minHeight="20.0" minWidth="200.0" onAction="#onActionTextFieldIp" prefHeight="35.0" prefWidth="200.0" text="Pepe">
         <VBox.margin>
             <Insets bottom="10.0" />
         </VBox.margin>

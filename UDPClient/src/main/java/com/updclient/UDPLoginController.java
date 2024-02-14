@@ -20,7 +20,7 @@ public class UDPLoginController {
     public static final int CLIENT_PORT = 6010; // Puerto del cliente.
     public static final int SERVER_PORT = 5010; // Puerto del servidor.
     public static final int BUFFER_SIZE = 1024; // Tamaño del buffer.
-    public static final String IP = "192.168.1.105"; // dirección IP del servidor.
+    public static final String IP = "192.168.1.21"; // dirección IP del servidor.
     public static  DatagramSocket clientSocket; // Declaración de un objeto DatagramSocket para el cliente.
 
     @FXML
@@ -94,6 +94,7 @@ public class UDPLoginController {
             Stage stage = (Stage) enterButton.getScene().getWindow();
             Scene scene = new Scene(root);
             stage.setScene(scene);
+            stage.setTitle(user);
             stage.show();
 
             stage.setOnCloseRequest(event -> stopClient());

@@ -23,7 +23,7 @@ public class UDPServer {
     // Tamaño del búfer para almacenar datos recibidos.
     private static final int BUFFER_SIZE = 1024;
     // Ruta de guardado para las imágenes recibidas por el servidor.
-    private static final String SAVE_RUTE = "C:\\Users\\rikia\\Downloads";
+    private static final String SAVE_RUTE = "C:\\Users\\josel\\Downloads";
     // Lista de direcciones IP de clientes conectados.
     private static final List<InetAddress> CLIENT_IP_LIST = new ArrayList<>();
     // Lista de puertos de clientes conectados.
@@ -103,7 +103,6 @@ public class UDPServer {
                 }
             } catch (Exception e) {
                 // Imprime en la consola cualquier excepción ocurrida
-                log("Error al iniciar el servidor en el puerto " + CLIENT_PORT_LIST);
                 Platform.exit();
             }
         }).start();
@@ -125,11 +124,9 @@ public class UDPServer {
             responseSocket.send(sendPacket);
             // Cierra el socket después de enviar la respuesta.
             responseSocket.close();
-            log("Respuesta enviada al cliente - IP: " + clientAddress + ", Puerto: " + clientPort + ", Respuesta: " + response);
             System.out.println("Respuesta enviada al cliente - IP: " + clientAddress + ", Puerto: " + clientPort + ", Respuesta: " + response);
         } catch (Exception e) {
             // En caso de error, imprime la traza de la excepción.
-            log("Error al enviar respuesta al cliente: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -160,13 +157,11 @@ public class UDPServer {
         String receivedMessage = messageParts[2];
 
         // Imprime en la consola el nombre de usuario y el mensaje recibido/
-        log("Mensaje recibido de " + receivedUserName + ": " + receivedMessage);
         System.out.println("Mensaje recibido de " + receivedUserName + ": " + receivedMessage);
 
         // Comprueba si el mensaje es igual a "STOP":
         if (receivedMessage.equals("STOP")) {
             // Si el mensaje es igual a "STOP", imprime en la consola y cierra el servidor/
-            log("Servidor detenido...");
             System.out.println("Servidor detenido...");
             // Se para el servidor
             stopServer();
@@ -199,12 +194,9 @@ public class UDPServer {
 
             // Cierra el socket después de enviar el mensaje a todos los clientes.
             clientSocket.close();
-
-            log("Mensaje reenviado a todos los clientes");
             System.out.println("Mensaje reenviado a todos los clientes");
         } catch (Exception e) {
             // Imprime la traza de la excepción si se produce algún error.
-            log("Error al reenviar mensaje a los clientes: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -253,7 +245,6 @@ public class UDPServer {
                 // Enviando el nombre del archivo al servidor.
                 DatagramPacket fileStatPacket = new DatagramPacket(fileNameBytes, fileNameBytes.length, clientAddress, clientPort);
                 clientSocket.send(fileStatPacket);
-                log("Archivo enviado a " + clientAddress + " " + clientPort);
                 System.out.println("Archivo enviado a " + clientAddress + " " + clientPort);
 
                 // Leyendo el archivo y enviándolo al servidor.
@@ -265,7 +256,6 @@ public class UDPServer {
             clientSocket.close();
         } catch (Exception e) {
             // Imprimiendo la traza de la excepción en caso de error.
-            log("Error al reenviar imágenes a los clientes: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -310,21 +300,18 @@ public class UDPServer {
                     // Enviar acuse de recibo.
                     sendAck(foundLast, socket, address, port);
                 } else {
-                    log("Número de secuencia esperado: " + (foundLast + 1) + " pero se recibió " + sequenceNumber + ". DESCARTANDO");
                     System.out.println("Número de secuencia esperado: " + (foundLast + 1) + " pero se recibió " + sequenceNumber + ". DESCARTANDO");
                     // Reenviar el acuse de recibo.
                     sendAck(foundLast, socket, address, port);
                 }
                 // Verificar el último datagrama.
                 if (flag) {
-                    log("Imagen recibida");
                     System.out.println("Imagen recibida");
                     outToFile.close();
                     break;
                 }
             }
         } catch (IOException e) {
-            log("Error al enviar: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -346,11 +333,8 @@ public class UDPServer {
             socket.send(acknowledgement);
 
             // Se imprime un mensaje (comentado) indicando el número de secuencia enviado en el acuse de recibo.
-            log("Acuse de recibo enviado: Número de secuencia = " + foundLast);
-            System.out.println("Acuse de recibo enviado: Número de secuencia = " + foundLast);
         } catch (Exception e) {
             // Se imprime la traza de la excepción en caso de error durante el envío del acuse de recibo.
-            log("Error al enviar: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -358,7 +342,6 @@ public class UDPServer {
     // Logica para transformar imagen a bytes y enviarlo:
     private void sendFile(DatagramSocket socket, byte[] fileByteArray, InetAddress address, int port) {
         try {
-            log("Enviando file to: " + address + " " + port);
             System.out.println("Enviando file");
             // Para ordenar.
             int sequenceNumber = 0;
@@ -397,8 +380,6 @@ public class UDPServer {
                 DatagramPacket sendPacket = new DatagramPacket(message, message.length, address, port);
                 socket.send(sendPacket);
                 // Enviando los datos.
-                log("Sent: Sequence number = " + sequenceNumber);
-                System.out.println("Sent: Sequence number = " + sequenceNumber);
 
                 // ¿Se recibió el datagrama?
                 boolean ackRec;
@@ -417,21 +398,15 @@ public class UDPServer {
                         ackRec = true;
                     } catch (SocketTimeoutException e) {
                         // No recibimos un acuse de recibo.
-                        log("Socket timed out waiting for ack");
-                        System.out.println("Socket timed out waiting for ack");
                         ackRec = false;
                     }
 
                     if ((ackSequence == sequenceNumber) && (ackRec)) {
                         // Si el paquete se recibió correctamente se puede enviar el siguiente paquete.
-                        log("Ack received: Sequence Number = " + ackSequence);
-                        System.out.println("Ack received: Sequence Number = " + ackSequence);
                         break;
                     } else {
                         // El paquete no fue recibido, por lo que lo reenviamos.
                         socket.send(sendPacket);
-                        log("Resending: Sequence Number = " + sequenceNumber);
-                        System.out.println("Resending: Sequence Number = " + sequenceNumber);
                     }
                 }
             }

@@ -33,22 +33,23 @@ public class UDPLoginController {
         try {
             // Inicialización del socket del cliente en el puerto especificado.
             clientSocket = new DatagramSocket(CLIENT_PORT);
-            // Configuración de la acción cuando se hace clic en el botón de entrada.
-            enterButton.setOnAction(event -> {
-                String user = username.getText(); // Obtención del nombre de usuario ingresado.
-                // Verificación de la disponibilidad del nombre de usuario.
-                if (verificarNombreUsuario(user)) {
-                    abrirVentanaTabla(user); // Abre la ventana principal si el nombre de usuario está disponible.
-                }
-            });
+
         } catch (Exception e) {
             try {
                 clientSocket = new DatagramSocket(CLIENT_PORT2);
             }catch (Exception e2){
-                e2.printStackTrace();
+                System.out.println("Fallo 2");
             }
-            e.printStackTrace(); // Imprime la traza de la excepción en caso de error.
+            System.out.println("Fallo 1");
         }
+        // Configuración de la acción cuando se hace clic en el botón de entrada.
+        enterButton.setOnAction(event -> {
+            String user = username.getText(); // Obtención del nombre de usuario ingresado.
+            // Verificación de la disponibilidad del nombre de usuario.
+            if (verificarNombreUsuario(user)) {
+                abrirVentanaTabla(user); // Abre la ventana principal si el nombre de usuario está disponible.
+            }
+        });
     }
 
     private boolean verificarNombreUsuario(String username) {

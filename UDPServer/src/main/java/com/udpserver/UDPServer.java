@@ -23,7 +23,7 @@ public class UDPServer {
     // Tamaño del búfer para almacenar datos recibidos.
     private static final int BUFFER_SIZE = 1024;
     // Ruta de guardado para las imágenes recibidas por el servidor.
-    private static final String SAVE_RUTE = "C:\\Users\\josel\\Downloads";
+    private static final String SAVE_RUTE = "C:\\Users\\rikia\\Downloads";
     // Lista de direcciones IP de clientes conectados.
     private static final List<InetAddress> CLIENT_IP_LIST = new ArrayList<>();
     // Lista de puertos de clientes conectados.

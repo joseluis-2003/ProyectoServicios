@@ -12,13 +12,15 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
 
 public class UDPLoginController {
     // Definición de constantes:
-    public static final int CLIENT_PORT = 6011; // Puerto del cliente.
+    public static final int CLIENT_PORT2 = 6011; // Puerto del cliente.
+    public static final int CLIENT_PORT = 6010; // Puerto del cliente.
     public static final int SERVER_PORT = 5010; // Puerto del servidor.
     public static final int BUFFER_SIZE = 1024; // Tamaño del buffer.
-    public static final String IP = "192.168.1.21"; // dirección IP del servidor.
+    public static final String IP = "192.168.1.105"; // dirección IP del servidor.
     public static  DatagramSocket clientSocket; // Declaración de un objeto DatagramSocket para el cliente.
 
     @FXML
@@ -27,7 +29,7 @@ public class UDPLoginController {
     private Button enterButton;  // Botón de entrada.
 
     @FXML
-    public void initialize() {
+    public void initialize(){
         try {
             // Inicialización del socket del cliente en el puerto especificado.
             clientSocket = new DatagramSocket(CLIENT_PORT);
@@ -40,6 +42,11 @@ public class UDPLoginController {
                 }
             });
         } catch (Exception e) {
+            try {
+                clientSocket = new DatagramSocket(CLIENT_PORT2);
+            }catch (Exception e2){
+                e2.printStackTrace();
+            }
             e.printStackTrace(); // Imprime la traza de la excepción en caso de error.
         }
     }

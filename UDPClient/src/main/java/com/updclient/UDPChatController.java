@@ -22,7 +22,7 @@ import java.net.SocketTimeoutException;
 
 public class UDPChatController {
     private String userName; // Guardar nombre de usuario
-    public static final String SAVE_RUTE = "C:\\Users\\josel\\Downloads\\serverimg"; // Ruta para imágenes
+    public static final String SAVE_RUTE = "C:\\Users\\rikia\\Downloads\\serverimg"; // Ruta para imágenes
 
     @FXML
     private TextField messageInput;

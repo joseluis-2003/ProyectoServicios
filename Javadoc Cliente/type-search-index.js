@@ -1,1 +1,0 @@
-typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"com.example.cliente","l":"Cliente"},{"p":"com.example.cliente.Interfaces","l":"ConstantsInterface"},{"p":"com.example.cliente","l":"UDPCliente"}];updateSearchResults();
